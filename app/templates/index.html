@@ -1,731 +1,365 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MoodMeter - Diagnóstico Emocional por IA en Tiempo Real</title>
-    <meta name="description" content="Playground interactivo para medir emociones y microexpresiones faciales en tiempo real, graficar el historial anímico y aprender sobre redes neuronales convolucionales.">
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- FontAwesome Iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Hoja de Estilo -->
-    <link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SecureFace Access</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
-    <div class="stars-background"></div>
-    <div class="glow-orb-1"></div>
-    <div class="glow-orb-2"></div>
+  <div class="bg-grid"></div>
+  <div class="orb orb-one"></div>
+  <div class="orb orb-two"></div>
 
-    <div class="app-container">
-        <!-- Encabezado Principal -->
-        <header class="main-header">
-            <div class="logo-area">
-                <div class="logo-scanner">
-                    <i class="fa-solid fa-expand"></i>
-                    <div class="logo-corners"></div>
-                </div>
-                <div class="logo-text">
-                    <h1>Mood<span>Meter</span></h1>
-                    <p>CNN FACIAL GESTURE DECODER</p>
-                </div>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div>
+          <p class="eyebrow">Security platform</p>
+          <h1>SecureFace</h1>
+        </div>
+      </div>
+      <div class="status-pill">
+        <span class="status-dot"></span>
+        Sistema activo
+      </div>
+    </header>
+
+    <main class="app-grid">
+      <section class="panel hero-panel">
+        <div class="panel-header">
+          <h2>Control de acceso biométrico</h2>
+          <span class="tag">Biometría</span>
+        </div>
+
+        <div class="tab-switch">
+          <button class="tab-btn active" data-target="login-panel">Iniciar sesión</button>
+          <button class="tab-btn" data-target="register-panel">Registrar persona</button>
+        </div>
+
+        <div class="tab-panel active" id="login-panel">
+          <div class="camera-box">
+            <video id="loginVideo" autoplay muted playsinline></video>
+            <img id="loginPreview" alt="Vista previa de acceso" />
+            <div class="scan-frame"></div>
+          </div>
+
+          <div class="field-group">
+            <label for="loginName">Nombre del usuario</label>
+            <input id="loginName" type="text" placeholder="Ej. Ana García" />
+          </div>
+
+          <div class="button-row">
+            <button class="primary-btn" id="loginCapture">Verificar rostro</button>
+            <button class="secondary-btn" id="loginCameraToggle">Cámara</button>
+            <label class="secondary-btn upload-btn">
+              <input type="file" id="loginFile" accept="image/*" />
+              Archivo
+            </label>
+          </div>
+
+          <div class="result-box" id="loginResult">
+            Estado: esperando verificación.
+          </div>
+        </div>
+
+        <div class="tab-panel" id="register-panel">
+          <div class="camera-box">
+            <video id="registerVideo" autoplay muted playsinline></video>
+            <img id="registerPreview" alt="Vista previa de registro" />
+            <div class="scan-frame"></div>
+          </div>
+
+          <div class="field-group">
+            <label for="registerName">Nombre completo</label>
+            <input id="registerName" type="text" placeholder="Ej. Carlos Mendoza" />
+          </div>
+
+          <div class="button-row">
+            <button class="primary-btn" id="registerCapture">Registrar rostro</button>
+            <button class="secondary-btn" id="registerCameraToggle">Cámara</button>
+            <label class="secondary-btn upload-btn">
+              <input type="file" id="registerFile" accept="image/*" />
+              Archivo
+            </label>
+          </div>
+
+          <div class="result-box" id="registerResult">
+            Estado: listo para alta biométrica.
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel info-panel">
+        <div class="panel-header">
+          <h2>Seguridad</h2>
+          <span class="tag green">Protegido</span>
+        </div>
+
+        <div class="metric">
+          <span class="metric-label">Verificación</span>
+          <strong id="metricTrust">0.00</strong>
+        </div>
+
+        <div class="metric">
+          <span class="metric-label">Usuarios activos</span>
+          <strong id="metricUsers">0</strong>
+        </div>
+
+        <div class="security-list">
+          <div class="security-item">
+            <span class="icon"><i class="fa-solid fa-fingerprint"></i></span>
+            <div>
+              <strong>Biometría</strong>
+              <p>Autenticación por rostro.</p>
             </div>
-            <div class="status-badge">
-                <span class="status-dot"></span>
-                <span class="status-text" id="statusText">Detector Listo</span>
+          </div>
+
+          <div class="security-item">
+            <span class="icon"><i class="fa-solid fa-lock"></i></span>
+            <div>
+              <strong>Sin contraseñas</strong>
+              <p>La identidad reemplaza la clave.</p>
             </div>
-        </header>
+          </div>
 
-        <!-- Rejilla Principal de Trabajo -->
-        <main class="dashboard-grid">
-            
-            <!-- Columna Izquierda: Captura e Historial -->
-            <section class="workspace-left">
-                
-                <!-- Tarjeta del Escáner de Video -->
-                <div class="glass-panel scanner-card" id="scannerCard">
-                    <h2><i class="fa-solid fa-face-viewfinder"></i> Visor de Captura Biométrica</h2>
-                    
-                    <div class="media-viewport">
-                        <video id="videoElement" autoplay muted playsinline></video>
-                        <canvas id="captureCanvas" style="display:none;"></canvas>
-                        <img id="fallbackImgElement" class="preview-img" style="display:none;" alt="Vista previa archivo local">
-                        
-                        <!-- Elementos de Escaneo Láser y Rejilla -->
-                        <div class="scan-overlay" id="scanOverlay">
-                            <div class="scan-grid"></div>
-                            <div class="scan-laser"></div>
-                        </div>
+          <div class="security-item">
+            <span class="icon"><i class="fa-solid fa-user-check"></i></span>
+            <div>
+              <strong>Alta segura</strong>
+              <p>Registro con nombre y foto facial.</p>
+            </div>
+          </div>
+        </div>
 
-                        <!-- Recuadro del Rostro Detectado Dinámico -->
-                        <div class="face-bounding-box" id="faceBox"></div>
-                    </div>
+        <div class="log-box" id="systemLog">
+          <div>● Sistema preparado para autenticación facial.</div>
+          <div>● Modo local activo.</div>
+        </div>
+      </aside>
+    </main>
+  </div>
 
-                    <!-- Botones y Acciones de Entrada -->
-                    <div class="control-actions">
-                        <button class="btn btn-primary" id="btnCapture" onclick="captureAndAnalyze()">
-                            <i class="fa-solid fa-bolt-lightning"></i> Escanear Rostro
-                        </button>
-                        
-                        <button class="btn btn-secondary" id="btnToggleCam" onclick="toggleCamera()" title="Encender/Apagar Cámara">
-                            <i class="fa-solid fa-video-slash"></i>
-                        </button>
+  <script>
+    const state = {
+      loginStream: null,
+      registerStream: null,
+      loginCameraOn: false,
+      registerCameraOn: false,
+    };
 
-                        <div class="file-input-wrapper">
-                            <button class="btn btn-secondary" onclick="triggerFileInput()" title="Subir Imagen Local">
-                                <i class="fa-solid fa-file-arrow-up"></i> Archivo
-                            </button>
-                            <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleFileSelect(this)">
-                        </div>
-                    </div>
-                </div>
+    const log = (message) => {
+      const box = document.getElementById('systemLog');
+      const item = document.createElement('div');
+      item.textContent = `● ${message}`;
+      box.prepend(item);
+      while (box.children.length > 5) box.removeChild(box.lastChild);
+    };
 
-                <!-- Tarjeta del Historial Emocional (Línea de Tiempo) -->
-                <div class="glass-panel timeline-card">
-                    <div class="timeline-header">
-                        <h2><i class="fa-solid fa-chart-area"></i> Mood Timeline (Historial Emocional)</h2>
-                        <span class="timeline-badge" id="timelineCount">0 Escaneos</span>
-                    </div>
-                    
-                    <div class="chart-viewport">
-                        <!-- Mensaje vacío inicial -->
-                        <div class="timeline-empty-msg" id="emptyChartMsg">
-                            <i class="fa-solid fa-wave-square"></i>
-                            <p>Realiza escaneos seguidos para trazar tu curva emocional en tiempo real</p>
-                        </div>
-                        <canvas id="timelineCanvas"></canvas>
-                    </div>
-                </div>
+    function setTab(target) {
+      document.querySelectorAll('.tab-btn').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.target === target);
+      });
+      document.querySelectorAll('.tab-panel').forEach((panel) => {
+        panel.classList.toggle('active', panel.id === target);
+      });
+    }
 
-            </section>
+    document.querySelectorAll('.tab-btn').forEach((btn) => {
+      btn.addEventListener('click', () => setTab(btn.dataset.target));
+    });
 
-            <!-- Columna Derecha: Métricas y Explicación Teórica -->
-            <section class="workspace-right">
-                
-                <!-- Tarjeta de Métricas Rápidas -->
-                <div class="glass-panel stats-card">
-                    <div class="stats-grid">
-                        <div class="stat-box">
-                            <div class="stat-icon"><i class="fa-solid fa-mask"></i></div>
-                            <div class="stat-info">
-                                <span class="stat-label">Emoción Dominante</span>
-                                <span class="stat-value neon-glow" id="statDominant">--</span>
-                            </div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-icon"><i class="fa-solid fa-gauge-high"></i></div>
-                            <div class="stat-info">
-                                <span class="stat-label">Tiempo Inferencia</span>
-                                <span class="stat-value" id="statTime">--</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tarjeta con Gauges (Distribución Probabilística) -->
-                <div class="glass-panel gauges-card">
-                    <h3><i class="fa-solid fa-chart-simple"></i> Desglose de Probabilidades (Softmax)</h3>
-                    
-                    <div class="gauges-list">
-                        <!-- Happy -->
-                        <div class="gauge-row">
-                            <div class="gauge-header">
-                                <span class="gauge-name"><span class="gauge-emoji">😃</span> Felicidad</span>
-                                <span class="gauge-val" id="val-happy">0.0%</span>
-                            </div>
-                            <div class="gauge-track">
-                                <div class="gauge-fill happy" id="fill-happy"></div>
-                            </div>
-                        </div>
-
-                        <!-- Sad -->
-                        <div class="gauge-row">
-                            <div class="gauge-header">
-                                <span class="gauge-name"><span class="gauge-emoji">😢</span> Tristeza</span>
-                                <span class="gauge-val" id="val-sad">0.0%</span>
-                            </div>
-                            <div class="gauge-track">
-                                <div class="gauge-fill sad" id="fill-sad"></div>
-                            </div>
-                        </div>
-
-                        <!-- Angry -->
-                        <div class="gauge-row">
-                            <div class="gauge-header">
-                                <span class="gauge-name"><span class="gauge-emoji">😠</span> Enojo</span>
-                                <span class="gauge-val" id="val-angry">0.0%</span>
-                            </div>
-                            <div class="gauge-track">
-                                <div class="gauge-fill angry" id="fill-angry"></div>
-                            </div>
-                        </div>
-
-                        <!-- Surprise -->
-                        <div class="gauge-row">
-                            <div class="gauge-header">
-                                <span class="gauge-name"><span class="gauge-emoji">😮</span> Sorpresa</span>
-                                <span class="gauge-val" id="val-surprise">0.0%</span>
-                            </div>
-                            <div class="gauge-track">
-                                <div class="gauge-fill surprise" id="fill-surprise"></div>
-                            </div>
-                        </div>
-
-                        <!-- Fear -->
-                        <div class="gauge-row">
-                            <div class="gauge-header">
-                                <span class="gauge-name"><span class="gauge-emoji">😨</span> Miedo</span>
-                                <span class="gauge-val" id="val-fear">0.0%</span>
-                            </div>
-                            <div class="gauge-track">
-                                <div class="gauge-fill fear" id="fill-fear"></div>
-                            </div>
-                        </div>
-
-                        <!-- Disgust -->
-                        <div class="gauge-row">
-                            <div class="gauge-header">
-                                <span class="gauge-name"><span class="gauge-emoji">🤢</span> Disgusto</span>
-                                <span class="gauge-val" id="val-disgust">0.0%</span>
-                            </div>
-                            <div class="gauge-track">
-                                <div class="gauge-fill disgust" id="fill-disgust"></div>
-                            </div>
-                        </div>
-
-                        <!-- Neutral -->
-                        <div class="gauge-row">
-                            <div class="gauge-header">
-                                <span class="gauge-name"><span class="gauge-emoji">😐</span> Neutral</span>
-                                <span class="gauge-val" id="val-neutral">0.0%</span>
-                            </div>
-                            <div class="gauge-track">
-                                <div class="gauge-fill neutral" id="fill-neutral"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tarjeta Didáctica "Bajo el Capó" -->
-                <div class="glass-panel edu-card">
-                    <div class="edu-title">
-                        <h3><i class="fa-solid fa-graduation-cap"></i> Bajo el Capó</h3>
-                        <div class="edu-nav">
-                            <button class="edu-tab-btn active" onclick="switchEduTab('cnn')">Capas CNN</button>
-                            <button class="edu-tab-btn" onclick="switchEduTab('softmax')">Softmax Math</button>
-                        </div>
-                    </div>
-
-                    <!-- Contenido pestaña CNN -->
-                    <div class="edu-content active" id="edu-cnn">
-                        <p>Las <strong>Redes Neuronales Convolucionales (CNN)</strong> no ven una emoción directamente. Realizan un filtrado jerárquico:</p>
-                        <p>1. <strong>Bordes y Sombras:</strong> Las primeras capas convolucionales detectan arrugas, bordes de labios y sombras en ojos.</p>
-                        <p>2. <strong>Piezas Faciales:</strong> Capas más profundas agrupan texturas y reconocen el estiramiento de la comisura de la boca o el arqueo de las cejas.</p>
-                        <p>3. <strong>Vectores de Características:</strong> Se extrae una firma matemática densa del rostro que resume la contracción muscular de la microexpresión.</p>
-                    </div>
-
-                    <!-- Contenido pestaña Softmax -->
-                    <div class="edu-content" id="edu-softmax">
-                        <p>La capa de salida de la red neuronal utiliza la función de activación **Softmax** para convertir puntuaciones arbitrarias en probabilidades:</p>
-                        
-                        <div class="formula-block">
-                            σ(z)_i = e^(z_i) / Σ(e^(z_j))
-                        </div>
-
-                        <p>Esta fórmula toma las intensidades puras de salida (valores exponenciales) y las normaliza para asegurar que la probabilidad de todas las emociones **sume exactamente el 100%**.</p>
-                        <p>El valor más alto se convierte en tu **emoción dominante**.</p>
-                    </div>
-                </div>
-
-            </section>
-        </main>
-    </div>
-
-    <!-- Contenedor para Notificaciones Flotantes -->
-    <div class="notification-container" id="notificationContainer"></div>
-
-    <!-- Script JavaScript para Control Completo -->
-    <script>
-        let stream = null;
-        let isCamActive = false;
-        let isProcessing = false;
-        let selectedFileBase64 = null;
-        let isUsingFile = false;
-
-        // Historial para la Línea de Tiempo
-        let moodHistory = [];
-
-        // Inicialización
-        window.addEventListener('DOMContentLoaded', () => {
-            createStars();
-            initWebcam();
-            setupTimelineChart();
+    async function openCamera(videoId, streamKey) {
+      const video = document.getElementById(videoId);
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
         });
+        video.srcObject = stream;
+        state[streamKey] = stream;
+        if (streamKey === 'loginStream') state.loginCameraOn = true;
+        if (streamKey === 'registerStream') state.registerCameraOn = true;
+      } catch (err) {
+        log('La cámara no está disponible; usa archivo local.');
+      }
+    }
 
-        // Configuración de la Cámara Web
-        async function initWebcam() {
-            const video = document.getElementById('videoElement');
-            const statusText = document.getElementById('statusText');
+    function stopCamera(streamKey) {
+      const stream = state[streamKey];
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
+      state[streamKey] = null;
+      if (streamKey === 'loginStream') state.loginCameraOn = false;
+      if (streamKey === 'registerStream') state.registerCameraOn = false;
+    }
 
-            try {
-                stream = await navigator.mediaDevices.getUserMedia({
-                    video: { width: 640, height: 480, facingMode: "user" }
-                });
-                video.srcObject = stream;
-                isCamActive = true;
-                statusText.innerText = "Cámara Activa";
-                document.getElementById('btnToggleCam').innerHTML = `<i class="fa-solid fa-video"></i>`;
-                document.getElementById('btnToggleCam').className = "btn btn-secondary";
-            } catch (err) {
-                console.warn("Cámara no detectada o denegada. Activando fallback de archivo local.", err);
-                statusText.innerText = "Modo Archivo";
-                showNotification("Cámara web no encontrada. Por favor, sube una foto usando el botón 'Archivo'.", "info");
-                activateFileMode();
-            }
-        }
+    document.getElementById('loginCameraToggle').addEventListener('click', async () => {
+      if (state.loginCameraOn) {
+        stopCamera('loginStream');
+        log('Cámara de login desactivada.');
+      } else {
+        await openCamera('loginVideo', 'loginStream');
+        log('Cámara de login activada.');
+      }
+    });
 
-        // Encender / Apagar Cámara Manualmente
-        function toggleCamera() {
-            const video = document.getElementById('videoElement');
-            const btn = document.getElementById('btnToggleCam');
-            const statusText = document.getElementById('statusText');
+    document.getElementById('registerCameraToggle').addEventListener('click', async () => {
+      if (state.registerCameraOn) {
+        stopCamera('registerStream');
+        log('Cámara de registro desactivada.');
+      } else {
+        await openCamera('registerVideo', 'registerStream');
+        log('Cámara de registro activada.');
+      }
+    });
 
-            if (isCamActive) {
-                if (stream) {
-                    stream.getTracks().forEach(track => track.stop());
-                }
-                video.srcObject = null;
-                isCamActive = false;
-                statusText.innerText = "Cámara Apagada";
-                btn.innerHTML = `<i class="fa-solid fa-video-slash"></i>`;
-                btn.className = "btn btn-secondary";
-            } else {
-                initWebcam();
-            }
-        }
+    function readFileAsDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
 
-        function activateFileMode() {
-            isUsingFile = true;
-            isCamActive = false;
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-            }
-            document.getElementById('videoElement').style.display = 'none';
-            document.getElementById('scanOverlay').style.display = 'none';
-            document.getElementById('fallbackImgElement').style.display = 'block';
-            document.getElementById('faceBox').style.display = 'none';
-        }
+    function captureStill(videoId) {
+      const video = document.getElementById(videoId);
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth || 640;
+      canvas.height = video.videoHeight || 480;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      return canvas.toDataURL('image/jpeg');
+    }
 
-        // Selección de Archivo Local
-        function triggerFileInput() {
-            document.getElementById('fileInput').click();
-        }
+    async function registerUser() {
+      const name = document.getElementById('registerName').value.trim();
+      const resultBox = document.getElementById('registerResult');
 
-        function handleFileSelect(input) {
-            const file = input.files[0];
-            if (!file) return;
+      if (!name) {
+        resultBox.textContent = 'Ingresa el nombre completo antes de registrar.';
+        return;
+      }
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                selectedFileBase64 = e.target.result;
-                
-                // Actualizar interfaz a modo archivo
-                activateFileMode();
-                const fallbackImg = document.getElementById('fallbackImgElement');
-                fallbackImg.src = selectedFileBase64;
-                
-                showNotification("Imagen cargada. Presiona 'Escanear Rostro' para analizar.", "success");
-            };
-            reader.readAsDataURL(file);
-        }
+      let imageData = null;
+      const fileInput = document.getElementById('registerFile');
 
-        // Capturar fotograma de Video
-        function captureFrame() {
-            const video = document.getElementById('videoElement');
-            const canvas = document.getElementById('captureCanvas');
-            const ctx = canvas.getContext('2d');
+      if (fileInput.files && fileInput.files[0]) {
+        imageData = await readFileAsDataUrl(fileInput.files[0]);
+      } else if (state.registerCameraOn) {
+        imageData = captureStill('registerVideo');
+      } else {
+        resultBox.textContent = 'No hay imagen disponible: activa la cámara o sube un archivo.';
+        return;
+      }
 
-            canvas.width = video.videoWidth || 640;
-            canvas.height = video.videoHeight || 480;
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            
-            return canvas.toDataURL('image/jpeg');
-        }
+      resultBox.textContent = 'Registrando persona en el sistema...';
 
-        // Capturar y Mandar al Servidor (DeepFace)
-        async function captureAndAnalyze() {
-            if (isProcessing) return;
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ full_name: name, image: imageData }),
+      });
 
-            const btn = document.getElementById('btnCapture');
-            const faceBox = document.getElementById('faceBox');
-            
-            let imageData = null;
+      const data = await response.json();
+      if (response.ok) {
+        resultBox.textContent = `Registro exitoso: ${data.user.full_name}`;
+        log(`Usuario registrado: ${data.user.full_name}`);
+        await loadUserCount();
+      } else {
+        resultBox.textContent = data.detail || 'No se pudo registrar.';
+        log(data.detail || 'Registro fallido.');
+      }
+    }
 
-            if (isUsingFile) {
-                if (!selectedFileBase64) {
-                    showNotification("Por favor, sube un archivo de imagen primero.", "error");
-                    return;
-                }
-                imageData = selectedFileBase64;
-            } else {
-                if (!isCamActive) {
-                    showNotification("La cámara está apagada. Enciéndela o sube una imagen.", "error");
-                    return;
-                }
-                imageData = captureFrame();
-            }
+    async function loginUser() {
+      const name = document.getElementById('loginName').value.trim();
+      const resultBox = document.getElementById('loginResult');
 
-            // Cambiar estados visuales de carga
-            isProcessing = true;
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Analizando...`;
-            faceBox.style.display = 'none'; // Ocultar mientras reprocesa
+      if (!name) {
+        resultBox.textContent = 'Ingresa el nombre para intentar la autenticación.';
+        return;
+      }
 
-            try {
-                const response = await fetch('/api/analyze-mood', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ image: imageData })
-                });
+      let imageData = null;
+      const fileInput = document.getElementById('loginFile');
 
-                const data = await response.json();
+      if (fileInput.files && fileInput.files[0]) {
+        imageData = await readFileAsDataUrl(fileInput.files[0]);
+      } else if (state.loginCameraOn) {
+        imageData = captureStill('loginVideo');
+      } else {
+        resultBox.textContent = 'No hay imagen disponible para verificar: activa la cámara o sube un archivo.';
+        return;
+      }
 
-                if (response.ok && data.success) {
-                    showNotification("Análisis completado con éxito.", "success");
-                    displayResults(data);
-                    
-                    // Agregar registro al historial
-                    moodHistory.push({
-                        emotion: data.dominant_emotion,
-                        scores: data.emotions,
-                        timestamp: Date.now()
-                    });
-                    
-                    updateTimelineChart();
-                } else {
-                    showNotification(data.detail || "No se detectó rostro o falló el análisis.", "error");
-                    triggerShakeEffect();
-                }
-            } catch (err) {
-                console.error("Error en conexión de red:", err);
-                showNotification("No se pudo conectar con el servidor de IA. Asegúrate de iniciar start.sh", "error");
-                triggerShakeEffect();
-            } finally {
-                isProcessing = false;
-                btn.disabled = false;
-                btn.innerHTML = `<i class="fa-solid fa-bolt-lightning"></i> Escanear Rostro`;
-            }
-        }
+      resultBox.textContent = 'Verificando identidad biométrica...';
 
-        // Renderizar los Resultados en la Interfaz
-        function displayResults(data) {
-            // Actualizar métricas rápidas
-            const mappingNombres = {
-                "happy": "😃 Feliz",
-                "sad": "😢 Triste",
-                "angry": "😠 Enojado",
-                "surprise": "😮 Sorprendido",
-                "fear": "😨 Asustado",
-                "disgust": "🤢 Disgustado",
-                "neutral": "😐 Neutral"
-            };
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ full_name: name, image: imageData }),
+      });
 
-            const dominantColorMap = {
-                "happy": "var(--color-happy)",
-                "sad": "var(--color-sad)",
-                "angry": "var(--color-angry)",
-                "surprise": "var(--color-surprise)",
-                "fear": "var(--color-fear)",
-                "disgust": "var(--color-disgust)",
-                "neutral": "var(--color-neutral)"
-            };
+      const data = await response.json();
+      if (response.ok) {
+        resultBox.textContent = `Acceso concedido para ${data.user.full_name}.`;
+        document.getElementById('metricTrust').textContent = data.similarity.toFixed(2);
+        log(`Acceso otorgado a ${data.user.full_name}`);
+      } else {
+        resultBox.textContent = data.detail || 'Acceso denegado.';
+        document.getElementById('metricTrust').textContent = '0.00';
+        log(data.detail || 'Identidad no verificada.');
+      }
+    }
 
-            const labelEl = document.getElementById('statDominant');
-            labelEl.innerText = mappingNombres[data.dominant_emotion] || data.dominant_emotion;
-            labelEl.style.color = dominantColorMap[data.dominant_emotion] || '#fff';
-            labelEl.style.textShadow = `0 0 10px ${dominantColorMap[data.dominant_emotion]}40`;
+    document.getElementById('registerCapture').addEventListener('click', registerUser);
+    document.getElementById('loginCapture').addEventListener('click', loginUser);
 
-            document.getElementById('statTime').innerText = data.inference_time_seconds + "s";
+    document.getElementById('registerFile').addEventListener('change', async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      const dataUrl = await readFileAsDataUrl(file);
+      const preview = document.getElementById('registerPreview');
+      preview.src = dataUrl;
+      preview.style.display = 'block';
+      log(`Imagen cargada para registro: ${file.name}`);
+    });
 
-            // Actualizar gauges individuales
-            for (let emotion in data.emotions) {
-                const val = data.emotions[emotion];
-                const textEl = document.getElementById(`val-${emotion}`);
-                const fillEl = document.getElementById(`fill-${emotion}`);
+    document.getElementById('loginFile').addEventListener('change', async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      const dataUrl = await readFileAsDataUrl(file);
+      const preview = document.getElementById('loginPreview');
+      preview.src = dataUrl;
+      preview.style.display = 'block';
+      log(`Imagen cargada para login: ${file.name}`);
+    });
 
-                if (textEl && fillEl) {
-                    textEl.innerText = val.toFixed(1) + "%";
-                    fillEl.style.width = val + "%";
-                }
-            }
+    async function loadUserCount() {
+      try {
+        const response = await fetch('/api/users');
+        const data = await response.json();
+        document.getElementById('metricUsers').textContent = data.users ? data.users.length : 0;
+      } catch (err) {
+        console.warn('No se pudo cargar el conteo de usuarios');
+      }
+    }
 
-            // Dibujar recuadro de la cara
-            renderFaceBox(data.box);
-        }
-
-        // Calcular escala de coordenadas sobre el video/imagen para la mira láser
-        function renderFaceBox(box) {
-            const viewport = document.querySelector('.media-viewport');
-            const faceBox = document.getElementById('faceBox');
-            
-            // Dimensiones físicas del contenedor
-            const containerW = viewport.clientWidth;
-            const containerH = viewport.clientHeight;
-
-            // Dimensiones lógicas de la captura (640x480)
-            const logicalW = 640;
-            const logicalH = 480;
-
-            // Factores de escala
-            const scaleX = containerW / logicalW;
-            const scaleY = containerH / logicalH;
-
-            // Calcular y pintar
-            faceBox.style.width = (box.w * scaleX) + 'px';
-            faceBox.style.height = (box.h * scaleY) + 'px';
-            faceBox.style.top = (box.y * scaleY) + 'px';
-
-            // Si la cámara está activa, recordamos que la vista está en modo espejo (espejada)
-            if (!isUsingFile) {
-                const xCalculado = containerW - (box.x * scaleX) - (box.w * scaleX);
-                faceBox.style.left = xCalculado + 'px';
-            } else {
-                faceBox.style.left = (box.x * scaleX) + 'px';
-            }
-
-            faceBox.style.display = 'block';
-        }
-
-        // ==========================================================================
-        // Visualización de la Línea de Tiempo (Canvas)
-        // ==========================================================================
-        let canvas = document.getElementById('timelineCanvas');
-        let ctx = canvas.getContext('2d');
-
-        function setupTimelineChart() {
-            // Ajustar resolución lógica para pantallas Retina
-            const rect = canvas.getBoundingClientRect();
-            canvas.width = rect.width * window.devicePixelRatio;
-            canvas.height = rect.height * window.devicePixelRatio;
-            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-            drawEmptyTimeline();
-        }
-
-        // Escucha cambios de tamaño de pantalla para redibujar el canvas de forma fluida
-        window.addEventListener('resize', () => {
-            const rect = canvas.getBoundingClientRect();
-            canvas.width = rect.width * window.devicePixelRatio;
-            canvas.height = rect.height * window.devicePixelRatio;
-            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-            updateTimelineChart();
-        });
-
-        function drawEmptyTimeline() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // Dibujar rejilla horizontal suave de fondo
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.02)';
-            ctx.lineWidth = 1;
-            
-            const w = canvas.width / window.devicePixelRatio;
-            const h = canvas.height / window.devicePixelRatio;
-
-            for (let i = 1; i < 4; i++) {
-                const y = (h / 4) * i;
-                ctx.beginPath();
-                ctx.moveTo(0, y);
-                ctx.lineTo(w, y);
-                ctx.stroke();
-            }
-        }
-
-        function updateTimelineChart() {
-            const countBadge = document.getElementById('timelineCount');
-            const emptyMsg = document.getElementById('emptyChartMsg');
-
-            countBadge.innerText = moodHistory.length + (moodHistory.length === 1 ? " Escaneo" : " Escaneos");
-
-            if (moodHistory.length === 0) {
-                emptyMsg.style.display = 'flex';
-                drawEmptyTimeline();
-                return;
-            }
-
-            emptyMsg.style.display = 'none';
-
-            const w = canvas.width / window.devicePixelRatio;
-            const h = canvas.height / window.devicePixelRatio;
-
-            ctx.clearRect(0, 0, w, h);
-
-            // Rejilla de fondo
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
-            ctx.lineWidth = 1;
-            for (let i = 1; i < 4; i++) {
-                const y = (h / 4) * i;
-                ctx.beginPath();
-                ctx.moveTo(0, y);
-                ctx.lineTo(w, y);
-                ctx.stroke();
-            }
-
-            // Mapeo vertical de emociones a alturas (Feliz en la cima, Enojo abajo)
-            const verticalMap = {
-                "happy": 0.15,
-                "surprise": 0.3,
-                "neutral": 0.5,
-                "fear": 0.65,
-                "sad": 0.78,
-                "disgust": 0.85,
-                "angry": 0.9
-            };
-
-            const dominantColorMap = {
-                "happy": "#10b981",    // Verde
-                "surprise": "#f59e0b", // Ámbar
-                "neutral": "#9ca3af",  // Gris
-                "fear": "#8b5cf6",     // Violeta
-                "sad": "#3b82f6",      // Azul
-                "disgust": "#d946ef",  // Rosa
-                "angry": "#f43f5e"     // Rojo
-            };
-
-            // Dibujar Línea de Historial
-            if (moodHistory.length > 1) {
-                ctx.beginPath();
-                ctx.lineWidth = 3;
-                
-                // Crear Gradiente Lineal para la curva
-                const grad = ctx.createLinearGradient(0, 0, w, 0);
-                moodHistory.forEach((pt, idx) => {
-                    const x = (w / (moodHistory.length - 1)) * idx;
-                    const color = dominantColorMap[pt.emotion] || "#fff";
-                    // Asegurar interpolación del color en el gradiente
-                    const step = idx / (moodHistory.length - 1);
-                    grad.addColorStop(Math.min(Math.max(step, 0), 1), color);
-                });
-                
-                ctx.strokeStyle = grad;
-
-                // Trazar Curva Bezier Suave
-                moodHistory.forEach((pt, idx) => {
-                    const x = (w / (moodHistory.length - 1)) * idx;
-                    const y = h * (verticalMap[pt.emotion] || 0.5);
-
-                    if (idx === 0) {
-                        ctx.moveTo(x, y);
-                    } else {
-                        const prevX = (w / (moodHistory.length - 1)) * (idx - 1);
-                        const prevY = h * (verticalMap[moodHistory[idx - 1].emotion] || 0.5);
-                        
-                        // Puntos de control para suavizado
-                        const cpX1 = prevX + (x - prevX) / 2;
-                        const cpY1 = prevY;
-                        const cpX2 = prevX + (x - prevX) / 2;
-                        const cpY2 = y;
-                        
-                        ctx.bezierCurveTo(cpX1, cpY1, cpX2, cpY2, x, y);
-                    }
-                });
-                ctx.stroke();
-            }
-
-            // Dibujar Puntos de Nodo (Dots)
-            moodHistory.forEach((pt, idx) => {
-                const x = moodHistory.length === 1 ? w / 2 : (w / (moodHistory.length - 1)) * idx;
-                const y = h * (verticalMap[pt.emotion] || 0.5);
-                const color = dominantColorMap[pt.emotion] || "#fff";
-
-                // Sombra Neón
-                ctx.shadowColor = color;
-                ctx.shadowBlur = 8;
-
-                // Anillo exterior blanco
-                ctx.fillStyle = "#ffffff";
-                ctx.beginPath();
-                ctx.arc(x, y, 6, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Centro del color de la emoción
-                ctx.fillStyle = color;
-                ctx.beginPath();
-                ctx.arc(x, y, 4, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Restablecer sombra
-                ctx.shadowBlur = 0;
-            });
-        }
-
-        // Alternar Pestañas del Explainer Didáctico
-        function switchEduTab(tab) {
-            document.querySelectorAll('.edu-tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.edu-content').forEach(c => c.classList.remove('active'));
-
-            if (tab === 'cnn') {
-                event.target.classList.add('active');
-                document.getElementById('edu-cnn').classList.add('active');
-            } else {
-                event.target.classList.add('active');
-                document.getElementById('edu-softmax').classList.add('active');
-            }
-        }
-
-        // Efecto Shake visual de error
-        function triggerShakeEffect() {
-            const card = document.getElementById('scannerCard');
-            card.classList.add('shake-effect');
-            setTimeout(() => card.classList.remove('shake-effect'), 500);
-        }
-
-        // Notificaciones Flotantes
-        function showNotification(message, type = 'info') {
-            const container = document.getElementById('notificationContainer');
-            const notif = document.createElement('div');
-            notif.className = `notification ${type}`;
-
-            let icon = 'fa-circle-info';
-            if (type === 'success') icon = 'fa-circle-check';
-            if (type === 'error') icon = 'fa-circle-exclamation';
-
-            notif.innerHTML = `
-                <i class="fa-solid ${icon} notif-icon"></i>
-                <div class="notif-body">
-                    <p>${message}</p>
-                </div>
-                <button class="notif-close" onclick="this.parentElement.remove()">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            `;
-
-            container.appendChild(notif);
-
-            setTimeout(() => {
-                notif.classList.add('fade-out');
-                setTimeout(() => notif.remove(), 400);
-            }, 4000);
-        }
-
-        // Renderizado del Fondo de Estrellas
-        function createStars() {
-            const bg = document.querySelector('.stars-background');
-            const count = 50;
-            for (let i = 0; i < count; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = `${Math.random() * 100}vw`;
-                star.style.top = `${Math.random() * 100}vh`;
-                
-                const size = Math.random() * 2 + 1;
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-                
-                star.style.animationDelay = `${Math.random() * 5}s`;
-                star.style.animationDuration = `${Math.random() * 5 + 5}s`;
-                bg.appendChild(star);
-            }
-        }
-    </script>
+    window.addEventListener('load', async () => {
+      await openCamera('loginVideo', 'loginStream');
+      await openCamera('registerVideo', 'registerStream');
+      await loadUserCount();
+    });
+  </script>
 </body>
 </html>
+
